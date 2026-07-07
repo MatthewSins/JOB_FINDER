@@ -230,6 +230,13 @@
                     const apiUrl = `/api/search?q=${encodedQuery}&timeRestrict=${timeRestrict}`;
 
                     const response = await fetch(apiUrl);
+                    
+                    // Catch 404 HTML pages before they break the JSON parser
+                    const contentType = response.headers.get("content-type");
+                    if (!contentType || !contentType.includes("application/json")) {
+                        throw new Error("Backend API not found. Ensure the 'api/search.js' file is uploaded to GitHub and you are testing on the live Vercel URL.");
+                    }
+
                     const data = await response.json();
 
                     loader.classList.add('hidden');
